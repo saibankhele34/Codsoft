@@ -1,0 +1,87 @@
+#IMPORTING MODULES
+from tkinter import *
+from tkinter import messagebox
+
+#INITIALIZING WINDOW AND SETTING EMPTY LIST
+window = Tk()
+tasks = []
+
+#FUNCTION TO ADD TASK
+def add_task():
+    task = entry.get()
+    if task.strip()!= "":
+        lb.insert(END, task)
+        entry.delete(0,END)
+    else:
+        messagebox.showwarning("WARNING","Please enter a task.")
+
+#FUNCTION TO DELETE TASK
+def delete_task():
+    task_index = lb.curselection()
+    if task_index:
+        lb.delete(task_index)
+    else:
+        messagebox.showwarning("WARNING","Please select task to delete.")
+
+#FUNCTION TO EDIT TASK
+def edit_task():
+    task_index = lb.curselection()
+    if task_index:
+        task_index = task_index[0]
+        edited_task = entry.get()
+        if edited_task.strip() != "":
+            lb.delete(task_index)
+            lb.insert(task_index, edited_task)
+            entry.delete(0,END)
+        else:
+            messagebox.showwarning("WARNING","Please enter a task.")
+    else:
+        messagebox.showwarning("WARNING","Please select task to edit.")
+
+#FUNCTION TO EXIT
+def exit_todo():
+    window.destroy()
+
+#SETTING UP THE WINDOW
+window.title("TO-DO LIST")
+window.geometry("500x400")
+window.config(bg="light blue")
+window.resizable(False,False)
+
+frame = Frame(window)
+frame.pack()
+
+heading = Label(frame, text="To-Do List", font=("Georgia",20), pady=10)
+heading.pack()
+
+sb = Scrollbar(frame)
+sb.pack(side=RIGHT, fill=BOTH)
+
+lb = Listbox(frame, width='30', height='7', font=('Times New Roman', '10'))
+lb.pack()
+
+for task in tasks:
+    lb.insert(END,task)
+
+lb.config(yscrollcommand = sb.set)
+sb.config(command = lb.yview)
+
+entry = Entry(window, font=('Times New Roman', 15))
+entry.pack(pady=20)
+
+button_frame = Frame(window)
+button_frame.pack(pady=20)
+
+AddTask = Button(button_frame, text='Add Task', padx=20, pady=10, command=add_task)
+AddTask.pack(fill=BOTH, expand=True, side=LEFT)
+
+DelTask = Button(button_frame, text='Delete Task', padx=20, pady=10, command=delete_task)
+DelTask.pack(fill=BOTH, expand=True, side=LEFT)
+
+EditTask = Button(button_frame, text='Edit Task', padx=20, pady=10, command=edit_task)
+EditTask.pack(fill=BOTH, expand=True, side=LEFT)
+
+Exit = Button(button_frame, text='Exit', padx=20, pady=10, command=exit_todo)
+Exit.pack(fill=BOTH, expand=True, side=LEFT)
+
+window.mainloop()
